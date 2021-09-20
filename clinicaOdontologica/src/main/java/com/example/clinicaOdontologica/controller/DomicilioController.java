@@ -1,5 +1,6 @@
 package com.example.clinicaOdontologica.controller;
 
+import com.example.clinicaOdontologica.model.DomicilioDTO;
 import com.example.clinicaOdontologica.persistence.entities.Domicilio;
 import com.example.clinicaOdontologica.service.impl.DomicilioServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

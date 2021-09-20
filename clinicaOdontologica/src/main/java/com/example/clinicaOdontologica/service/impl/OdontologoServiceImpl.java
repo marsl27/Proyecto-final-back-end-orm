@@ -1,12 +1,13 @@
 package com.example.clinicaOdontologica.service.impl;
 
+import com.example.clinicaOdontologica.model.OdontologoDTO;
 import com.example.clinicaOdontologica.persistence.entities.Odontologo;
 import com.example.clinicaOdontologica.persistence.repositories.OdontologoRepository;
 import com.example.clinicaOdontologica.service.OdontologoService;
-import com.example.clinicaOdontologica.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,28 +17,32 @@ public class OdontologoServiceImpl implements OdontologoService {
     OdontologoRepository repository;
 
     @Override
-    public Odontologo guardar(Odontologo odon) {
-        return repository.save(odon);
+    public OdontologoDTO guardar(OdontologoDTO odon) {
+        return new OdontologoDTO(repository.save(odon.toEntity()));
     }
 
     @Override
-    public Odontologo buscar(Integer id) {
-        return repository.findById(id).get();
+    public OdontologoDTO buscar(Integer id) {
+        return new OdontologoDTO(repository.findById(id).get());
     }
 
     @Override
-    public List<Odontologo> buscarTodos() {
-        return repository.findAll();
+    public List<OdontologoDTO> buscarTodos() {
+        List<OdontologoDTO>odontologos = new ArrayList<>();
+
+        for (Odontologo odon:repository.findAll()) {
+            odontologos.add(new OdontologoDTO(odon));
+        }
+        return odontologos;
     }
 
     @Override
-    public Odontologo actualizar(Odontologo odon, Integer id) {
-        odon.setId(id);
-        return repository.save(odon);
+    public OdontologoDTO actualizar(OdontologoDTO odon) {
+        return new OdontologoDTO(repository.save(odon.toEntity()));
     }
 
     @Override
     public void eliminar(Integer id) {
-
+        repository.deleteById(id);
     }
 }

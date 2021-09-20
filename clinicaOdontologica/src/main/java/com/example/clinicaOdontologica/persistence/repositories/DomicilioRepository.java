@@ -1,5 +1,6 @@
 package com.example.clinicaOdontologica.persistence.repositories;
 
+import com.example.clinicaOdontologica.model.DomicilioDTO;
 import com.example.clinicaOdontologica.persistence.entities.Domicilio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
