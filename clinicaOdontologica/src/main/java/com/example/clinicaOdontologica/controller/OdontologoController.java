@@ -1,6 +1,7 @@
 package com.example.clinicaOdontologica.controller;
 
 import com.example.clinicaOdontologica.model.OdontologoDTO;
+import com.example.clinicaOdontologica.model.PacienteDTO;
 import com.example.clinicaOdontologica.persistence.entities.Odontologo;
 import com.example.clinicaOdontologica.service.OdontologoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,14 @@ public class OdontologoController {
 
     @PostMapping("/guardar")
     public ResponseEntity<OdontologoDTO> guardarOdontologo(@RequestBody OdontologoDTO odon){
-        return ResponseEntity.ok(odontologoService.guardar(odon));
+        OdontologoDTO odontologoCreado = odontologoService.guardar(odon);
+        ResponseEntity<OdontologoDTO> respuesta;
+        if(odontologoCreado != null){
+            respuesta = ResponseEntity.ok(odontologoCreado);
+        }else{
+            respuesta = ResponseEntity.badRequest().body(odontologoCreado);
+        }
+        return respuesta;
     }
 
     @GetMapping("/todos")
@@ -27,17 +35,26 @@ public class OdontologoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OdontologoDTO> buscarPorId(@PathVariable Integer id){
-        return ResponseEntity.ok(odontologoService.buscar(id));
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id){
+        OdontologoDTO odonBuscado = odontologoService.buscar(id);
+        ResponseEntity<?> respuesta;
+        if (odonBuscado != null) {
+            respuesta= ResponseEntity.ok(odonBuscado);
+        } else {
+            respuesta= ResponseEntity.notFound().build();
+        }
+        return respuesta;
     }
 
     @PutMapping("/actualizar")
     public ResponseEntity<?> actualizarOdontologo(@RequestBody OdontologoDTO odon){
+        ResponseEntity<?> respuesta;
         if(odontologoService.buscar(odon.getId())!= null){
-            return ResponseEntity.ok(odontologoService.actualizar(odon));
+           respuesta = ResponseEntity.ok(odontologoService.actualizar(odon));
         }else {
-            return ResponseEntity.badRequest().body("Servicio no disponible. Intente mas tarde");
+          respuesta = ResponseEntity.badRequest().body("Servicio no disponible. Intente mas tarde");
         }
+        return respuesta;
     }
 
     @DeleteMapping("/{id}")

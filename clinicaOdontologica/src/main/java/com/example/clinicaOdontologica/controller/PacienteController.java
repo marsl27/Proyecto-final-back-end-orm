@@ -18,11 +18,25 @@ public class PacienteController {
 
     @PostMapping("/guardar")
     public ResponseEntity<PacienteDTO> guardarPaciente(@RequestBody PacienteDTO pac){
-       return ResponseEntity.ok(pacienteService.guardar(pac));
+        PacienteDTO pacCreado = pacienteService.guardar(pac);
+        ResponseEntity<PacienteDTO> respuesta;
+        if(pacCreado != null){
+            respuesta = ResponseEntity.ok(pacCreado);
+        }else{
+            respuesta = ResponseEntity.badRequest().body(pacCreado);
+        }
+        return respuesta;
     }
     @GetMapping("/{id}")
-    public ResponseEntity<PacienteDTO> buscarPorId(@PathVariable Integer id){
-        return ResponseEntity.ok(pacienteService.buscar(id));
+    public ResponseEntity<PacienteDTO> buscarPorId(@PathVariable Integer id) {
+        PacienteDTO pacBuscado = pacienteService.buscar(id);
+        ResponseEntity<PacienteDTO> respuesta;
+        if (pacBuscado != null) {
+            respuesta= ResponseEntity.ok(pacBuscado);
+        } else {
+            respuesta= ResponseEntity.notFound().build();
+        }
+        return respuesta;
     }
 
     @GetMapping("/todos")
@@ -32,16 +46,25 @@ public class PacienteController {
 
     @PutMapping("/actualizar")
     public ResponseEntity<?> actualizarPaciente(@RequestBody PacienteDTO pac){
+        ResponseEntity<?> respuesta;
         if(pacienteService.buscar(pac.getId())!= null){
-            return ResponseEntity.ok(pacienteService.actualizar(pac));
+            respuesta = ResponseEntity.ok(pacienteService.actualizar(pac));
         }else {
-            return ResponseEntity.badRequest().body("Servicio no disponible. Intente mas tarde");
+            respuesta = ResponseEntity.badRequest().body("Servicio no disponible. Intente mas tarde");
         }
+        return respuesta;
     }
 
     @GetMapping("/buscar/{dni}")
     public ResponseEntity<PacienteDTO> buscarPorDni(@PathVariable String dni){
-        return ResponseEntity.ok(pacienteService.buscarPorDni(dni));
+        PacienteDTO pacBuscado = pacienteService.buscarPorDni(dni);
+        ResponseEntity<PacienteDTO> respuesta;
+        if (pacBuscado != null) {
+            respuesta= ResponseEntity.ok(pacBuscado);
+        } else {
+            respuesta= ResponseEntity.notFound().build();
+        }
+        return respuesta;
     }
 
     @DeleteMapping("/{id}")
