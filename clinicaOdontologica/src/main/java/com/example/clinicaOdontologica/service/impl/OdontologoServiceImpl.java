@@ -1,7 +1,6 @@
 package com.example.clinicaOdontologica.service.impl;
 
 import com.example.clinicaOdontologica.model.OdontologoDTO;
-import com.example.clinicaOdontologica.model.PacienteDTO;
 import com.example.clinicaOdontologica.persistence.entities.Odontologo;
 import com.example.clinicaOdontologica.persistence.repositories.OdontologoRepository;
 import com.example.clinicaOdontologica.service.OdontologoService;
@@ -42,7 +41,7 @@ public class OdontologoServiceImpl implements OdontologoService {
         OdontologoDTO odontologoBuscado = null;
 
         try{
-            odontologoBuscado = new OdontologoDTO(repository.findById(id).get());
+            odontologoBuscado = new OdontologoDTO(repository.getById(id));
         }catch (Exception e){
             log.error(e.getMessage());
         }
