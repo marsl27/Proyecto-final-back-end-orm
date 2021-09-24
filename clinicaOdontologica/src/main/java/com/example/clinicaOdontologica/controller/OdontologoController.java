@@ -1,8 +1,6 @@
 package com.example.clinicaOdontologica.controller;
 
 import com.example.clinicaOdontologica.model.OdontologoDTO;
-import com.example.clinicaOdontologica.model.PacienteDTO;
-import com.example.clinicaOdontologica.persistence.entities.Odontologo;
 import com.example.clinicaOdontologica.service.OdontologoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

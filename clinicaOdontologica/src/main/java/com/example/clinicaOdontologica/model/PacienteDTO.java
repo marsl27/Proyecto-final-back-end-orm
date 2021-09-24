@@ -26,6 +26,7 @@ public class PacienteDTO{
         domicilio = new DomicilioDTO(p.getDomicilio());
     }
 
+
     public Integer getId() {
         return id;
     }

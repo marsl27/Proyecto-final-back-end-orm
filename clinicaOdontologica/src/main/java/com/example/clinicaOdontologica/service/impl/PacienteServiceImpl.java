@@ -1,6 +1,5 @@
 package com.example.clinicaOdontologica.service.impl;
 
-import ch.qos.logback.classic.BasicConfigurator;
 import com.example.clinicaOdontologica.model.PacienteDTO;
 import com.example.clinicaOdontologica.persistence.entities.Domicilio;
 import com.example.clinicaOdontologica.persistence.entities.Paciente;
@@ -25,17 +24,14 @@ public class PacienteServiceImpl implements PacienteService {
 
     final static Logger log = Logger.getLogger(PacienteServiceImpl.class);
 
-    public PacienteDTO guardar(PacienteDTO pac){//UNIR EL METODO CON BUSCARPORDNI PARA QUE PRIMERO BUSQUE EL PACIENTE Y SI NO ESTA, LO AGREGUE
+    public PacienteDTO guardar(PacienteDTO pac){
         log.debug("Iniciando método guardar paciente");
         PacienteDTO pacienteGuardado = null;
-        try{
-            pac.setFechaIngreso(LocalDate.now());
-            Domicilio dom = domicilioService.guardar(pac.toEntity().getDomicilio());
-            pac.getDomicilio().setId(dom.getId());
-            pacienteGuardado = new PacienteDTO(pacienteRepository.save(pac.toEntity()));
-        }catch(Exception e){
-            log.error(e.getMessage());
-        }
+
+        pac.setFechaIngreso(LocalDate.now()); //seteamos la fecha actual que es el dia en que se ingreso al paciente
+        Domicilio dom = domicilioService.guardar(pac.toEntity().getDomicilio());// usamos el metodo del domicilioService para saber si ya existe el domicilio en la base de datos.
+        pac.getDomicilio().setId(dom.getId());//Seteamos el id que nos retornó la linea anterior antes de guardar el paciente
+        pacienteGuardado = new PacienteDTO(pacienteRepository.save(pac.toEntity()));
 
         log.debug("Terminó la ejecución del método guardar paciente");
         return pacienteGuardado;
@@ -46,7 +42,7 @@ public class PacienteServiceImpl implements PacienteService {
         log.debug("Iniciando método buscar paciente");
         PacienteDTO pacienteBuscado = null;
         try{
-            pacienteBuscado = new PacienteDTO(pacienteRepository.findById(id).get());
+            pacienteBuscado = new PacienteDTO(pacienteRepository.getById(id));
         }catch (Exception e){
             log.error(e.getMessage());
         }
@@ -58,13 +54,11 @@ public class PacienteServiceImpl implements PacienteService {
     public List<PacienteDTO> buscarTodos() {
         log.debug("Buscando todos los pacientes");
         List<PacienteDTO> pacientes = new ArrayList<>();
-        try{
-            for (Paciente pac:pacienteRepository.findAll()) {
-                pacientes.add(new PacienteDTO(pac));
-            }
-        }catch (Exception e){
-            log.error(e.getMessage());
+
+        for (Paciente pac:pacienteRepository.findAll()) {
+            pacientes.add(new PacienteDTO(pac));
         }
+
         log.debug("Terminó la búsqueda de todos los pacientes");
         return pacientes;
     }
@@ -74,13 +68,10 @@ public class PacienteServiceImpl implements PacienteService {
         log.debug("Actualizando paciente");
         PacienteDTO pacienteActualizado = null;
 
-        try{
-            Domicilio dom= domicilioService.guardar(paciente.getDomicilio().toEntity());
-            paciente.getDomicilio().setId(dom.getId());
-            pacienteActualizado = new PacienteDTO(pacienteRepository.save(paciente.toEntity()));
-        }catch(Exception e){
-            log.error(e.getMessage());
-        }
+        Domicilio dom= domicilioService.guardar(paciente.getDomicilio().toEntity());
+        paciente.getDomicilio().setId(dom.getId());
+        pacienteActualizado = new PacienteDTO(pacienteRepository.save(paciente.toEntity()));
+
 
         log.debug("Finalizó la ejecución del método actualizar paciente");
         return pacienteActualizado;
@@ -104,24 +95,25 @@ public class PacienteServiceImpl implements PacienteService {
     public void eliminar(Integer id) {
         log.debug("Eliminando paciente");
 
-        try{
-            List<Paciente> pacientes = pacienteRepository.findAll();
-            Paciente paciente =pacienteRepository.getById(id);
-            Integer cont=0;
-            for (Paciente pac:pacientes) {
-                if(pac.getDomicilio().getId()==paciente.getDomicilio().getId()){ //comparamos si los id de los domicilios son iguales para saber si tienen el mismo
-                    cont++;
-                }
+        List<Paciente> pacientes = pacienteRepository.findAll();
+        Paciente paciente =pacienteRepository.getById(id);//buscamos el paciente a eliminar por id.
+
+        Integer cont=0;
+
+        for (Paciente pac:pacientes) {
+            if(pac.getDomicilio().getId()==paciente.getDomicilio().getId()){ //comparamos si el id del domicilio del paciente que se quiere borrar
+                //es igual a algún otro domicilio guardado para saber si está siendo usado por otro paciente. Si es asi, incrementamos el contador
+                cont++;
             }
-            if(cont==1){ //Si el contador es igual a 1 es porque el domicilio no se repetia
-                pacienteRepository.deleteById(id);
-                domicilioService.eliminar(paciente.getDomicilio().getId());
-            }else{
-                pacienteRepository.deleteById(id);
-            }
-        }catch (Exception e){
-            e.getMessage();
         }
+        if(cont==1){ //Si el contador es igual a 1 es porque el domicilio solo esta siendo usado por el paciente que se quiere borrar. Por lo tanto, podemos borrarlo sin afectar
+            //ningún paciente
+            pacienteRepository.deleteById(id);
+            domicilioService.eliminar(paciente.getDomicilio().getId());
+        }else{
+            pacienteRepository.deleteById(id);
+        }
+
         log.debug("Finalizó la ejecución del método eliminar paciente");
     }
 }

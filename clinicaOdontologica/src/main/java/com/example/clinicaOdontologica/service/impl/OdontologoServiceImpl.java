@@ -25,11 +25,7 @@ public class OdontologoServiceImpl implements OdontologoService {
         log.debug("Iniciando método guardar odontólogo");
         OdontologoDTO odontologoGuardado = null;
 
-        try{
-            odontologoGuardado = new OdontologoDTO(repository.save(odon.toEntity()));
-        }catch (Exception e){
-            log.error(e.getMessage());
-        }
+        odontologoGuardado = new OdontologoDTO(repository.save(odon.toEntity()));
 
         log.debug("Terminó la ejecución del método guardar odontólogo");
         return odontologoGuardado;
@@ -55,12 +51,8 @@ public class OdontologoServiceImpl implements OdontologoService {
         log.debug("Buscando todos los odontólogos");
         List<OdontologoDTO>odontologos = new ArrayList<>();
 
-        try{
-            for (Odontologo odon:repository.findAll()) {
-                odontologos.add(new OdontologoDTO(odon));
-            }
-        }catch (Exception e){
-            log.error(e.getMessage());
+        for (Odontologo odon:repository.findAll()) {
+            odontologos.add(new OdontologoDTO(odon));
         }
 
         log.debug("Terminó la búsqueda de todos los odontólogos");
@@ -72,11 +64,7 @@ public class OdontologoServiceImpl implements OdontologoService {
         log.debug("Actualizando odontólogo");
         OdontologoDTO odontologoActualizado = null;
 
-        try{
-            odontologoActualizado = new OdontologoDTO(repository.save(odon.toEntity()));
-        }catch(Exception e){
-            log.error(e.getMessage());
-        }
+        odontologoActualizado = new OdontologoDTO(repository.save(odon.toEntity()));
 
         log.debug("Finalizó la ejecución del método actualizar odontólogo");
         return odontologoActualizado;
@@ -85,11 +73,9 @@ public class OdontologoServiceImpl implements OdontologoService {
     @Override
     public void eliminar(Integer id) {
         log.debug("Eliminando odontólogo");
-        try{
-            repository.deleteById(id);
-        }catch (Exception e){
-            log.error(e.getMessage());
-        }
+
+        repository.deleteById(id);
+
         log.debug("Finalizó la ejecución del método eliminar odontólogo");
     }
 }

@@ -1,11 +1,9 @@
 package com.example.clinicaOdontologica.service.impl;
 
-import com.example.clinicaOdontologica.model.DomicilioDTO;
 import com.example.clinicaOdontologica.persistence.entities.Domicilio;
 import com.example.clinicaOdontologica.persistence.repositories.DomicilioRepository;
 
 import com.example.clinicaOdontologica.service.DomicilioService;
-import com.example.clinicaOdontologica.service.OdontologoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +17,9 @@ public class DomicilioServiceImpl implements DomicilioService {
     DomicilioRepository repository;
 
     @Override
-    public Domicilio guardar(Domicilio dom) {
-        Domicilio domicilioBuscado= repository.buscarDomicilioPorCalleYNumero(dom.getCalle(), dom.getNumero());
+    public Domicilio guardar(Domicilio dom) { //hice un metodo que busque el domicilio por calle, numero, provincia y localidad, para no guardarlos repetidos.
+        //si lo encuentra lo retorna, sino lo guarda y lo retorna
+        Domicilio domicilioBuscado= repository.buscarDomicilioPorCalleNumeroLocalidadProvincia(dom.getCalle(), dom.getNumero(), dom.getLocalidad(), dom.getProvincia());
         if (domicilioBuscado == null){
             domicilioBuscado = repository.save(dom);
         }

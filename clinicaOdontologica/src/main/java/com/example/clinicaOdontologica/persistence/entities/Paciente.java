@@ -1,8 +1,8 @@
 package com.example.clinicaOdontologica.persistence.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "pacientes")
@@ -19,6 +19,9 @@ public class Paciente{
     @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     @JoinColumn(name = "domicilio_id", nullable = false)
     private Domicilio domicilio;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name= "turno_id")
+    private List<Turno> turnos;
 
     public Paciente(){}
 
