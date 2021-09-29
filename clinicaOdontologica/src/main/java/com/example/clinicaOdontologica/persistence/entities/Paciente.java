@@ -15,6 +15,7 @@ public class Paciente{
     private String nombre;
     private String apellido;
     private Integer dni;
+    private String email;
     private LocalDate fechaIngreso;
     @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     @JoinColumn(name = "domicilio_id", nullable = false)
@@ -25,11 +26,12 @@ public class Paciente{
 
     public Paciente(){}
 
-    public Paciente(String nombre, String apellido, Integer dni, LocalDate fechaIngreso, Domicilio domicilio) {
+    public Paciente(String nombre, String apellido, Integer dni,String email, LocalDate fechaIngreso, Domicilio domicilio) {
 
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
+        this.email = email;
         this.fechaIngreso = fechaIngreso;
         this.domicilio = domicilio;
     }
@@ -67,6 +69,14 @@ public class Paciente{
         this.dni = dni;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public LocalDate getFechaIngreso() {
         return fechaIngreso;
     }
@@ -90,6 +100,7 @@ public class Paciente{
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
                 ", dni='" + dni + '\'' +
+                ", email=" + email +
                 ", fechaIngreso=" + fechaIngreso +
                 ", domicilio=" + domicilio +
                 '}';

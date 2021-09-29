@@ -10,6 +10,7 @@ public class PacienteDTO{
     private String nombre;
     private String apellido;
     private Integer dni;
+    private String email;
     private LocalDate fechaIngreso;
     private DomicilioDTO domicilio;
 
@@ -26,14 +27,16 @@ public class PacienteDTO{
         nombre = p.getNombre();
         apellido = p.getApellido();
         dni = p.getDni();
+        email = p.getEmail();
         fechaIngreso = p.getFechaIngreso();
         domicilio = new DomicilioDTO(p.getDomicilio());
     }
 
-    public PacienteDTO(String nombre, String apellido, Integer dni, DomicilioDTO domicilio){
+    public PacienteDTO(String nombre, String apellido, Integer dni, String email, DomicilioDTO domicilio){
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
+        this.email = email;
         this.domicilio = domicilio;
     }
 
@@ -70,6 +73,14 @@ public class PacienteDTO{
         this.dni = dni;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public LocalDate getFechaIngreso() {
         return fechaIngreso;
     }
@@ -93,6 +104,7 @@ public class PacienteDTO{
         entity.setApellido(apellido);
         entity.setDni(dni);
         entity.setNombre(nombre);
+        entity.setEmail(email);
         entity.setFechaIngreso(fechaIngreso);
         entity.setDomicilio(domicilio.toEntity());
 

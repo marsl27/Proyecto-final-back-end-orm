@@ -43,7 +43,7 @@ public class TurnoServiceTests {
     @Before
     public void cargarDatos() throws ServiceNotFoundException, ServiceBadRequestException {
         DomicilioDTO domicilio = new DomicilioDTO("Av Santa fe", "444", "CABA", "Buenos Aires");
-        PacienteDTO p = pacienteService.guardar(new PacienteDTO("Santiago", "Paz", 88888888, domicilio));
+        PacienteDTO p = pacienteService.guardar(new PacienteDTO("Santiago", "Paz", 88888888, "santiago@digital.com", domicilio));
         this.odontologoService.guardar(new OdontologoDTO("Santiago", "Paz", 3455647));
         this.turnoService.guardar(new TurnoDTO(1,1,LocalDateTime.now()));
     }

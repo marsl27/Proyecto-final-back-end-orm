@@ -30,12 +30,12 @@ public class PacienteServiceTests {
 
     @Before
     public void cargarDatos() throws ServiceNotFoundException, ServiceBadRequestException {
-        this.pacienteService.guardar(new PacienteDTO("Santiago", "Paz", 3455647, new DomicilioDTO("Rivadavia", "5467", "Caba", "Caba")));
+        this.pacienteService.guardar(new PacienteDTO("Santiago", "Paz", 3455647, "santiago@digital.com", new DomicilioDTO("Rivadavia", "5467", "Caba", "Caba")));
     }
 
     @Test
     public void guardarPacienteTest() throws ServiceNotFoundException, ServiceBadRequestException {
-        PacienteDTO paciente = pacienteService.guardar(new PacienteDTO("Juan", "Ramirez", 348971960, new DomicilioDTO("Rivadavia", "5467", "Caba", "Caba")));
+        PacienteDTO paciente = pacienteService.guardar(new PacienteDTO("Juan", "Ramirez", 348971960, "juan@digital.com", new DomicilioDTO("Rivadavia", "5467", "Caba", "Caba")));
         Assert.assertTrue(paciente.getId() != null);
     }
 
