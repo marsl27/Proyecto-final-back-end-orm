@@ -1,6 +1,7 @@
 package com.example.clinicaOdontologica.controller;
 
-import com.example.clinicaOdontologica.model.OdontologoDTO;
+import com.example.clinicaOdontologica.exceptions.ServiceBadRequestException;
+import com.example.clinicaOdontologica.exceptions.ServiceNotFoundException;
 import com.example.clinicaOdontologica.model.TurnoDTO;
 import com.example.clinicaOdontologica.service.TurnoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class TurnoController {
     TurnoService turnoService;
 
     @PostMapping("/guardar")
-    public ResponseEntity<TurnoDTO> guardarTurno(@RequestBody TurnoDTO turno){
+    public ResponseEntity<TurnoDTO> guardarTurno(@RequestBody TurnoDTO turno) throws ServiceNotFoundException, ServiceBadRequestException {
         TurnoDTO turnoCreado = turnoService.guardar(turno);
         ResponseEntity<TurnoDTO> respuesta;
         if(turnoCreado != null){
@@ -29,12 +30,12 @@ public class TurnoController {
     }
 
     @GetMapping("/todos")
-    public ResponseEntity<List<TurnoDTO>> buscarTodos(){
+    public ResponseEntity<List<TurnoDTO>> buscarTodos() throws ServiceNotFoundException, ServiceBadRequestException {
         return ResponseEntity.ok(turnoService.buscarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id){
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) throws ServiceNotFoundException, ServiceBadRequestException {
         TurnoDTO turnoBuscado = turnoService.buscar(id);
         ResponseEntity<?> respuesta;
         if (turnoBuscado != null) {
@@ -46,25 +47,15 @@ public class TurnoController {
     }
 
     @PutMapping("/actualizar")
-    public ResponseEntity<?> actualizarTurno(@RequestBody TurnoDTO turno){
-        ResponseEntity<?> respuesta;
-        if(turnoService.buscar(turno.getId())!= null){
-            respuesta = ResponseEntity.ok(turnoService.actualizar(turno));
-        }else {
-            respuesta = ResponseEntity.badRequest().body("Servicio no disponible. Intente mas tarde");
-        }
-        return respuesta;
+    public ResponseEntity<?> actualizarTurno(@RequestBody TurnoDTO turno) throws ServiceBadRequestException, ServiceNotFoundException{
+        turnoService.actualizar(turno);
+        return ResponseEntity.ok("El turno fue actualizado");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> borrarTurno(@PathVariable Integer id){
-        ResponseEntity<String> respuesta =null;
-        if(turnoService.buscar(id)!= null){
-            turnoService.eliminar(id);
-            respuesta= ResponseEntity.ok("Turno eliminado");
-        }else{
-            respuesta= ResponseEntity.notFound().build();
-        }
-        return respuesta;
+    public ResponseEntity<String> borrarTurno(@PathVariable Integer id) throws ServiceNotFoundException, ServiceBadRequestException {
+        turnoService.eliminar(id);
+
+        return ResponseEntity.ok("Turno eliminado");
     }
 }

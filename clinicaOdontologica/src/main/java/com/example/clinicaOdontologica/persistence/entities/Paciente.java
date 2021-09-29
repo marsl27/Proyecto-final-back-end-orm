@@ -14,7 +14,7 @@ public class Paciente{
     private Integer id;
     private String nombre;
     private String apellido;
-    private String dni;
+    private Integer dni;
     private LocalDate fechaIngreso;
     @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     @JoinColumn(name = "domicilio_id", nullable = false)
@@ -25,7 +25,7 @@ public class Paciente{
 
     public Paciente(){}
 
-    public Paciente(String nombre, String apellido, String dni, LocalDate fechaIngreso, Domicilio domicilio) {
+    public Paciente(String nombre, String apellido, Integer dni, LocalDate fechaIngreso, Domicilio domicilio) {
 
         this.nombre = nombre;
         this.apellido = apellido;
@@ -59,11 +59,11 @@ public class Paciente{
         this.nombre = nombre;
     }
 
-    public String getDni() {
+    public Integer getDni() {
         return dni;
     }
 
-    public void setDni(String dni) {
+    public void setDni(Integer dni) {
         this.dni = dni;
     }
 

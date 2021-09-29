@@ -14,11 +14,21 @@ public class OdontologoDTO {
 
     }
 
+    public OdontologoDTO(Integer id) {
+        this.id = id;
+    }
+
     public OdontologoDTO(Odontologo o){
         id = o.getId();
         nombre = o.getNombre();
         apellido = o.getApellido();
         matricula = o.getMatricula();
+    }
+
+    public OdontologoDTO(String nombre, String apellido, Integer matricula){
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.matricula = matricula;
     }
 
     public Integer getId() {

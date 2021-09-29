@@ -9,12 +9,16 @@ public class PacienteDTO{
     private Integer id;
     private String nombre;
     private String apellido;
-    private String dni;
+    private Integer dni;
     private LocalDate fechaIngreso;
     private DomicilioDTO domicilio;
 
     public PacienteDTO(){
 
+    }
+
+    public PacienteDTO(Integer id) {
+        this.id = id;
     }
 
     public PacienteDTO(Paciente p){
@@ -24,6 +28,13 @@ public class PacienteDTO{
         dni = p.getDni();
         fechaIngreso = p.getFechaIngreso();
         domicilio = new DomicilioDTO(p.getDomicilio());
+    }
+
+    public PacienteDTO(String nombre, String apellido, Integer dni, DomicilioDTO domicilio){
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+        this.domicilio = domicilio;
     }
 
 
@@ -51,11 +62,11 @@ public class PacienteDTO{
         this.apellido = apellido;
     }
 
-    public String getDni() {
+    public Integer getDni() {
         return dni;
     }
 
-    public void setDni(String dni) {
+    public void setDni(Integer dni) {
         this.dni = dni;
     }
 

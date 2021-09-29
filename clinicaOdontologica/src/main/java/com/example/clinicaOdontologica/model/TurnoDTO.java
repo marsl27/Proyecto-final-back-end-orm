@@ -27,6 +27,12 @@ public class TurnoDTO {
         anotaciones = t.getAnotaciones();
     }
 
+    public TurnoDTO(Integer idPaciente, Integer idOdontologo, LocalDateTime fecha){
+        paciente = new PacienteDTO(1);
+        odontologo = new OdontologoDTO(1);
+        this.fecha = fecha;
+    }
+
     public Integer getId() {
         return id;
     }

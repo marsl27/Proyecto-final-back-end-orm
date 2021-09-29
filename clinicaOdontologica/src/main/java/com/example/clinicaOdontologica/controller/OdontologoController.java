@@ -1,5 +1,7 @@
 package com.example.clinicaOdontologica.controller;
 
+import com.example.clinicaOdontologica.exceptions.ServiceBadRequestException;
+import com.example.clinicaOdontologica.exceptions.ServiceNotFoundException;
 import com.example.clinicaOdontologica.model.OdontologoDTO;
 import com.example.clinicaOdontologica.service.OdontologoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ public class OdontologoController {
     OdontologoService odontologoService;
 
     @PostMapping("/guardar")
-    public ResponseEntity<OdontologoDTO> guardarOdontologo(@RequestBody OdontologoDTO odon){
+    public ResponseEntity<OdontologoDTO> guardarOdontologo(@RequestBody OdontologoDTO odon) throws ServiceNotFoundException, ServiceBadRequestException {
         OdontologoDTO odontologoCreado = odontologoService.guardar(odon);
         ResponseEntity<OdontologoDTO> respuesta;
         if(odontologoCreado != null){
@@ -28,12 +30,12 @@ public class OdontologoController {
     }
 
     @GetMapping("/todos")
-    public ResponseEntity<List<OdontologoDTO>> buscarTodos(){
+    public ResponseEntity<List<OdontologoDTO>> buscarTodos() throws ServiceNotFoundException, ServiceBadRequestException {
         return ResponseEntity.ok(odontologoService.buscarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id){
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) throws ServiceNotFoundException, ServiceBadRequestException {
         OdontologoDTO odonBuscado = odontologoService.buscar(id);
         ResponseEntity<?> respuesta;
         if (odonBuscado != null) {
@@ -45,25 +47,14 @@ public class OdontologoController {
     }
 
     @PutMapping("/actualizar")
-    public ResponseEntity<?> actualizarOdontologo(@RequestBody OdontologoDTO odon){
-        ResponseEntity<?> respuesta;
-        if(odontologoService.buscar(odon.getId())!= null){
-           respuesta = ResponseEntity.ok(odontologoService.actualizar(odon));
-        }else {
-          respuesta = ResponseEntity.badRequest().body("Servicio no disponible. Intente mas tarde");
-        }
-        return respuesta;
+    public ResponseEntity<?> actualizarOdontologo(@RequestBody OdontologoDTO odon) throws ServiceNotFoundException, ServiceBadRequestException {
+        odontologoService.actualizar(odon);
+        return ResponseEntity.ok("El odontólogo fue actualizado");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> borrarOdontologo(@PathVariable Integer id){
-        ResponseEntity<String> respuesta =null;
-        if(odontologoService.buscar(id)!= null){
-            odontologoService.eliminar(id);
-            respuesta= ResponseEntity.ok("Odontologo eliminado");
-        }else{
-            respuesta= ResponseEntity.notFound().build();
-        }
-        return respuesta;
+    public ResponseEntity<String> borrarOdontologo(@PathVariable Integer id) throws ServiceNotFoundException, ServiceBadRequestException {
+        odontologoService.eliminar(id);
+        return ResponseEntity.ok("Odontologo eliminado");
     }
 }

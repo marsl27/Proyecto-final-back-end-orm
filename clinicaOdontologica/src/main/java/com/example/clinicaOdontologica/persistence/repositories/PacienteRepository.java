@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
     @Query("SELECT paciente FROM Paciente paciente WHERE paciente.dni =?1")
-    public Paciente buscarPorDni(String dni);
+    public Paciente buscarPorDni(Integer dni);
 
 }

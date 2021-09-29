@@ -22,6 +22,13 @@ public class DomicilioDTO {
         provincia = d.getProvincia();
     }
 
+    public DomicilioDTO(String calle, String numero, String localidad, String provincia) {
+        this.calle = calle;
+        this.numero = numero;
+        this.localidad = localidad;
+        this.provincia = provincia;
+    }
+
     public Integer getId() {
             return id;
         }

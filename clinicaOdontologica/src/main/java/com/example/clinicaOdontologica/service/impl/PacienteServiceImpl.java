@@ -1,5 +1,7 @@
 package com.example.clinicaOdontologica.service.impl;
 
+import com.example.clinicaOdontologica.exceptions.ServiceBadRequestException;
+import com.example.clinicaOdontologica.exceptions.ServiceNotFoundException;
 import com.example.clinicaOdontologica.model.PacienteDTO;
 import com.example.clinicaOdontologica.persistence.entities.Domicilio;
 import com.example.clinicaOdontologica.persistence.entities.Paciente;
@@ -24,7 +26,7 @@ public class PacienteServiceImpl implements PacienteService {
 
     final static Logger log = Logger.getLogger(PacienteServiceImpl.class);
 
-    public PacienteDTO guardar(PacienteDTO pac){
+    public PacienteDTO guardar(PacienteDTO pac) throws ServiceNotFoundException, ServiceBadRequestException {
         log.debug("Iniciando método guardar paciente");
         PacienteDTO pacienteGuardado = null;
 
@@ -38,20 +40,27 @@ public class PacienteServiceImpl implements PacienteService {
     }
 
     @Override
-    public PacienteDTO buscar(Integer id) {
+    public PacienteDTO buscar(Integer id) throws ServiceNotFoundException, ServiceBadRequestException{
         log.debug("Iniciando método buscar paciente");
-        PacienteDTO pacienteBuscado = null;
-        try{
-            pacienteBuscado = new PacienteDTO(pacienteRepository.getById(id));
-        }catch (Exception e){
-            log.error(e.getMessage());
+
+        if(id == null || id<=0){
+            throw new ServiceBadRequestException("El id del paciente debe ser un numero entero mayor a cero");
         }
+
+        Paciente pacienteBuscado = pacienteRepository.findById(id).orElse(null);
+
+        if(pacienteBuscado == null){
+            throw new ServiceNotFoundException("No se encontró el paciente con id "+id);
+        }
+
+        PacienteDTO pacienteDto = new PacienteDTO(pacienteBuscado);
+
         log.debug("Terminó la ejecución del método buscar paciente");
-        return pacienteBuscado;
+        return pacienteDto;
     }
 
     @Override
-    public List<PacienteDTO> buscarTodos() {
+    public List<PacienteDTO> buscarTodos() throws ServiceNotFoundException{
         log.debug("Buscando todos los pacientes");
         List<PacienteDTO> pacientes = new ArrayList<>();
 
@@ -59,13 +68,20 @@ public class PacienteServiceImpl implements PacienteService {
             pacientes.add(new PacienteDTO(pac));
         }
 
+        if(pacientes.size()==0){
+            throw new ServiceNotFoundException("No existen pacientes.");
+        }
+
+
         log.debug("Terminó la búsqueda de todos los pacientes");
         return pacientes;
     }
 
     @Override
-    public PacienteDTO actualizar(PacienteDTO paciente) {
+    public PacienteDTO actualizar(PacienteDTO paciente) throws ServiceNotFoundException, ServiceBadRequestException {
         log.debug("Actualizando paciente");
+        PacienteDTO pacienteBuscado= buscar(paciente.getId()); //Al buscar, utilizamos las excepciones del metodo buscar asi que si no existe el paciente,
+        //va a arrojar dicha excepcion
         PacienteDTO pacienteActualizado = null;
 
         Domicilio dom= domicilioService.guardar(paciente.getDomicilio().toEntity());
@@ -77,26 +93,39 @@ public class PacienteServiceImpl implements PacienteService {
         return pacienteActualizado;
     }
 
-    public PacienteDTO buscarPorDni(String dni){
+    public PacienteDTO buscarPorDni(Integer dni) throws ServiceBadRequestException, ServiceNotFoundException{
         log.debug("Buscando paciente por dni");
-        PacienteDTO pacienteBuscado = null;
 
-        try{
-            pacienteBuscado = new PacienteDTO(pacienteRepository.buscarPorDni(dni));
-        }catch(Exception e){
-            log.error(e.getMessage());
+        if(dni <= 1){
+            throw new ServiceBadRequestException("El dni del paciente no puede ser negativo.");
         }
 
+        Paciente pacienteBuscado = pacienteRepository.buscarPorDni(dni);
+
+        if(pacienteBuscado == null){
+            throw new ServiceNotFoundException("No se encontró el paciente con dni "+dni);
+        }
+
+        PacienteDTO pacienteDTO = new PacienteDTO(pacienteBuscado);
         log.debug("Terminó la ejecución del método buscar paciente por dni");
-        return pacienteBuscado;
+        return pacienteDTO;
     }
 
     @Override
-    public void eliminar(Integer id) {
+    public void eliminar(Integer id) throws ServiceNotFoundException, ServiceBadRequestException {
         log.debug("Eliminando paciente");
 
         List<Paciente> pacientes = pacienteRepository.findAll();
-        Paciente paciente =pacienteRepository.getById(id);//buscamos el paciente a eliminar por id.
+
+        if(id<= 0){
+            throw new ServiceBadRequestException("El id del paciente debe ser un numero entero mayor a cero");
+        }
+
+        PacienteDTO paciente = buscar(id);//buscamos el paciente a eliminar por id.
+
+        if(paciente==null){
+            throw new ServiceNotFoundException("No existe el paciente con id "+id);
+        }
 
         Integer cont=0;
 
