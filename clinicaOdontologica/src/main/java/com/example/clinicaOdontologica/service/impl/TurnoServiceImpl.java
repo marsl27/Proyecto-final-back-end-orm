@@ -14,8 +14,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TurnoServiceImpl implements TurnoService {
@@ -130,5 +133,24 @@ public class TurnoServiceImpl implements TurnoService {
 
         turnoRepository.deleteById(id);
         log.debug("Finalizó la ejecución dle método eliminar turno");
+    }
+
+    @Override
+    public List<TurnoDTO> buscarTurnosHastaUnaFecha(LocalDate fecha) throws ServiceNotFoundException, ServiceBadRequestException {
+        log.debug("Iniciando busqueda hasta el " + fecha);
+        List<Turno> turnos = turnoRepository.findAll();
+        Stream<Turno> streamTurnos =turnos.stream().filter(t->t.getFecha().isAfter(LocalDate.now()) && t.getFecha().isBefore(fecha));
+        List<Turno> listaTurnos = streamTurnos.collect(Collectors.toList());
+        List<TurnoDTO> busquedaTurnos = new ArrayList<>();
+
+        for (Turno turno:listaTurnos) {
+            TurnoDTO turnoBuscado = new TurnoDTO(turno);
+            turnoBuscado.setPaciente(pacienteService.buscar(turnoBuscado.getPaciente().getId()));
+            turnoBuscado.setOdontologo(odontologoService.buscar(turnoBuscado.getOdontologo().getId()));
+            busquedaTurnos.add(turnoBuscado);
+        }
+
+        log.debug("Finalizó la ejecución de la busqueda");
+        return busquedaTurnos;
     }
 }

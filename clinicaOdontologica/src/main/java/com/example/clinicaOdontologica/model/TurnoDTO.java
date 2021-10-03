@@ -5,13 +5,15 @@ import com.example.clinicaOdontologica.persistence.entities.Turno;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class TurnoDTO {
 
     private Integer id;
     private PacienteDTO paciente;
     private OdontologoDTO odontologo;
-    private LocalDateTime fecha;
+    private LocalDate fecha;
+    private LocalTime hora;
     private String anotaciones;
 
 
@@ -24,13 +26,15 @@ public class TurnoDTO {
         paciente = new PacienteDTO(t.getPaciente());
         odontologo = new OdontologoDTO(t.getOdontologo());
         fecha = t.getFecha();
+        hora= t.getHora();
         anotaciones = t.getAnotaciones();
     }
 
-    public TurnoDTO(Integer idPaciente, Integer idOdontologo, LocalDateTime fecha){
+    public TurnoDTO(Integer idPaciente, Integer idOdontologo, LocalDate fecha, LocalTime hora){
         paciente = new PacienteDTO(1);
         odontologo = new OdontologoDTO(1);
         this.fecha = fecha;
+        this.hora = hora;
     }
 
     public Integer getId() {
@@ -57,12 +61,20 @@ public class TurnoDTO {
         this.odontologo = odontologo;
     }
 
-    public LocalDateTime getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDateTime fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
     }
 
     public String getAnotaciones() {
@@ -80,6 +92,7 @@ public class TurnoDTO {
         entity.setPaciente(paciente.toEntity());
         entity.setOdontologo(odontologo.toEntity());
         entity.setFecha(fecha);
+        entity.setHora(hora);
         entity.setAnotaciones(anotaciones);
 
         return entity;

@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
+@Table(name = "appUsers")
 public class AppUser implements UserDetails {
 
     @Id
@@ -86,7 +87,7 @@ public class AppUser implements UserDetails {
         this.appUserRole = appUserRole;
     }
 
-    @Override
+    @Override //Crea la autorizacion para cada rol: se traducen los roles en autorizaciones
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(appUserRole.name());
         return Collections.singletonList(grantedAuthority);

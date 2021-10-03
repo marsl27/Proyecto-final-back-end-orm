@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -45,12 +46,12 @@ public class TurnoServiceTests {
         DomicilioDTO domicilio = new DomicilioDTO("Av Santa fe", "444", "CABA", "Buenos Aires");
         PacienteDTO p = pacienteService.guardar(new PacienteDTO("Santiago", "Paz", 88888888, "santiago@digital.com", domicilio));
         this.odontologoService.guardar(new OdontologoDTO("Santiago", "Paz", 3455647));
-        this.turnoService.guardar(new TurnoDTO(1,1,LocalDateTime.now()));
+        this.turnoService.guardar(new TurnoDTO(1,1,LocalDate.now(), LocalTime.now()));
     }
 
     @Test
     public void altaTurnoTest() throws ServiceNotFoundException, ServiceBadRequestException{
-        turnoService.guardar(new TurnoDTO(1,1,LocalDateTime.now()));
+        turnoService.guardar(new TurnoDTO(1,1,LocalDate.now(), LocalTime.now()));
         Assert.assertNotNull(turnoService.buscar(1));
     }
     @Test
